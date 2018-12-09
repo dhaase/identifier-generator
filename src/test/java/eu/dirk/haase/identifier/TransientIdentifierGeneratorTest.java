@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class TransientIdentifierGeneratorTest {
 
     @Test
-    public void test_collisions() {
+    public void test_empirical_for_collisions() {
         TransientIdentifierGenerator tig1 = new TransientIdentifierGenerator();
         final int max = 10_000_000;
         Set<Integer> uniqueIds = new HashSet<>(max);
