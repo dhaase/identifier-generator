@@ -6,6 +6,4 @@ public interface IdentifierGenerator {
 
     long nextLong();
 
-    byte[] nextBytes();
-
 }
