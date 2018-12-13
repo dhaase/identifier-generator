@@ -42,18 +42,18 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator {
 
 
     public TransientIdentifierGenerator() {
-        this.init2 = System.nanoTime();
+        this.init2 = new SecureRandom().nextLong();
         this.localCounter = new AtomicLong(0);
     }
 
     @Override
     public int nextInt() {
-        return (int) nextLong();
+        return (int) this.localCounter.incrementAndGet();
     }
 
     @Override
     public long nextLong() {
-        return SipHashInline.hash24(init1, init2, this.localCounter.incrementAndGet());
+        return SipHash24.hash(init1, init2, this.localCounter.incrementAndGet());
     }
 
 }

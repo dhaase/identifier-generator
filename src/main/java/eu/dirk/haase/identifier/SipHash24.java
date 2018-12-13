@@ -10,10 +10,10 @@ package eu.dirk.haase.identifier;
  * site.  Following license notice is subject to change based on the licensing
  * policy of siphash24.c.
  */
-public class SipHashInline {
+public class SipHash24 {
 
 
-    public static long hash24(long k0, long k1, long data) {
+    public final static long hash(long k0, long k1, long data) {
         long v0 = 0x736f6d6570736575L ^ k0;
         long v1 = 0x646f72616e646f6dL ^ k1;
         long v2 = 0x6c7967656e657261L ^ k0;

@@ -18,7 +18,7 @@ public class SipHashInlineTest {
         System.out.println("A: " + data[4]);
         System.out.println("B: " + nthByteOfLong(1, value.longValue()));
 
-        long hash2 = SipHashInline.hash24(1L,3L, value.longValue());
+        long hash2 = SipHash24.hash(1L,3L, value.longValue());
         System.out.println("::" + hash2);
         System.out.println("::" + 6340469858319189276L);
     }
