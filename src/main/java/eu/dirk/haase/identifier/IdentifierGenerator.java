@@ -6,4 +6,8 @@ public interface IdentifierGenerator {
 
     long nextLong();
 
+    int lastInt();
+
+    long lastLong();
+
 }
