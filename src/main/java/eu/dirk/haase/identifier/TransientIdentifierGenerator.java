@@ -1,5 +1,6 @@
 package eu.dirk.haase.identifier;
 
+import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -30,7 +31,9 @@ import java.util.concurrent.atomic.AtomicLong;
  * Die Wahrscheinlichkeit von Kollisionen wird praktisch vollst&auml;ndig
  * von der Qualit&auml;t des eingesetzten {@link SipHash24}-Generators bestimmt.
  */
-public final class TransientIdentifierGenerator implements IdentifierGenerator {
+public final class TransientIdentifierGenerator implements IdentifierGenerator, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
@@ -42,8 +45,12 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator {
 
 
     public TransientIdentifierGenerator() {
-        this.localKey2 = RANDOM.nextLong();
-        this.localCounter = new AtomicLong(0);
+        this(RANDOM.nextLong(), RANDOM.nextInt());
+    }
+
+    private TransientIdentifierGenerator(final long localKey2, final long initialValue) {
+        this.localKey2 = localKey2;
+        this.localCounter = new AtomicLong(initialValue);
     }
 
     @Override
@@ -80,7 +87,7 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator {
             return false;
         }
 
-        TransientIdentifierGenerator that = (TransientIdentifierGenerator) other;
+        final TransientIdentifierGenerator that = (TransientIdentifierGenerator) other;
         // Sind wir an dieser Stelle angelangt dann handelt es um
         // zwei unterschiedliche TransientIdentifierGenerator-Instanzen.
         // Wenn diese dann auch den gleichen Zustand haben, dann werden
@@ -95,5 +102,10 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator {
     @Override
     public int hashCode() {
         return (int) (localKey2 ^ (localKey2 >>> 32));
+    }
+
+    private Object writeReplace()
+            throws java.io.ObjectStreamException {
+        return new TransientIdentifierGenerator(RANDOM.nextLong(), RANDOM.nextInt());
     }
 }

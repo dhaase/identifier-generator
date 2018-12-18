@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
+import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -44,4 +45,30 @@ public class TransientIdentifierGeneratorTest {
         }
     }
 
+
+    @Test
+    public void test_serialization() throws IOException, ClassNotFoundException {
+        TransientIdentifierGenerator tig1 = new TransientIdentifierGenerator();
+        byte[] data = serialization(tig1);
+        TransientIdentifierGenerator tig2 = deserialization(data);
+        System.out.println("tig1.equals(tig2): " + tig1.equals(tig2));
+    }
+
+    public static <T> T deserialization(byte[] data) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(data);
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(bais);
+        ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
+        Object object = objectInputStream.readObject();
+        objectInputStream.close();
+        return (T) object;
+    }
+
+    public static byte[] serialization(Object object) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(baos);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(bufferedOutputStream);
+        objectOutputStream.writeObject(object);
+        objectOutputStream.close();
+        return baos.toByteArray();
+    }
 }
