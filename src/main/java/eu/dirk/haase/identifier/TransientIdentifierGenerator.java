@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Ein Generator um 32 Bit Identifier (= Kennungen) zu erzeugen.
+ * Ein Generator um 64 Bit Identifier (= Kennungen) zu erzeugen.
  * <p>
  * Dieser Generator liefert mit jedem Aufruf von {@link #nextLong()}
  * eine neue Id. Die generierten Ids sind <b>nicht</b> fortlaufend da
