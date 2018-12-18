@@ -2,8 +2,6 @@ package eu.dirk.haase.identifier;
 
 import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
 
 /**
  * Ein Generator um 32 Bit Identifier (= Kennungen) zu erzeugen.
@@ -36,15 +34,15 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator {
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    private static final long key1 = RANDOM.nextLong();
+    private static final long globalKey1 = RANDOM.nextLong();
 
     private final AtomicLong localCounter;
 
-    private final long key2;
+    private final long localKey2;
 
 
     public TransientIdentifierGenerator() {
-        this.key2 = RANDOM.nextLong();
+        this.localKey2 = RANDOM.nextLong();
         this.localCounter = new AtomicLong(0);
     }
 
@@ -55,7 +53,7 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator {
 
     @Override
     public long nextLong() {
-        return SipHash24.hash(key1, key2, this.localCounter.incrementAndGet());
+        return SipHash24.hash(globalKey1, localKey2, this.localCounter.incrementAndGet());
     }
 
     @Override
@@ -65,26 +63,37 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator {
 
     @Override
     public long lastLong() {
-        return SipHash24.hash(key1, key2, this.localCounter.get());
+        return SipHash24.hash(globalKey1, localKey2, this.localCounter.get());
     }
 
     @Override
     public String toString() {
-        return CompactIdentifierTexter.toText(lastLong());
+        return CompactIdentifierRepresentation.longToString(lastLong());
     }
 
     @Override
     public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
 
         TransientIdentifierGenerator that = (TransientIdentifierGenerator) other;
-
-        return (this.key1 == that.key1) && (this.key2 == that.key2);
+        // Sind wir an dieser Stelle angelangt dann handelt es um
+        // zwei unterschiedliche TransientIdentifierGenerator-Instanzen.
+        // Wenn diese dann auch den gleichen Zustand haben, dann werden
+        // sie auch stets die gleiche Folge von Ids erzeugen.
+        // Somit sind dann diese zwei TransientIdentifierGenerator-Instanzen
+        // aequivalent und daher berechtigterweise gleich.
+        // Anzumerken bleibt, das diese equals-Methode nicht atomar ausgefuehrt
+        // wird.
+        return (this.localKey2 == that.localKey2) && (this.localCounter.get() == that.localCounter.get());
     }
 
     @Override
     public int hashCode() {
-        return (int) (key2 ^ (key2 >>> 32));
+        return (int) (localKey2 ^ (localKey2 >>> 32));
     }
 }
