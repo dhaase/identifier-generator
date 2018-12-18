@@ -106,6 +106,6 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator, 
 
     private Object writeReplace()
             throws java.io.ObjectStreamException {
-        return new TransientIdentifierGenerator(RANDOM.nextLong(), RANDOM.nextInt());
+        return new TransientIdentifierGenerator();
     }
 }

@@ -14,32 +14,32 @@ public class CompactIdentifierRepresentation {
 
 
     public static String intToString(final int number) {
-        final char[] digits = {'0', '0', '0', '0', '0', '0'};
 
-        digits[0] = ALL_DIGITS[(number >>> 0) & MASK_6_BIT_I];
-        digits[1] = ALL_DIGITS[(number >>> 6) & MASK_6_BIT_I];
-        digits[2] = ALL_DIGITS[(number >>> 12) & MASK_6_BIT_I];
-        digits[3] = ALL_DIGITS[(number >>> 18) & MASK_6_BIT_I];
-        digits[4] = ALL_DIGITS[(number >>> 24) & MASK_6_BIT_I];
-        digits[5] = ALL_DIGITS[(number >>> 30) & MASK_6_BIT_I];
+        final char[] digits = {
+                ALL_DIGITS[((number >>> 0) & MASK_6_BIT_I)],
+                ALL_DIGITS[((number >>> 6) & MASK_6_BIT_I)],
+                ALL_DIGITS[((number >>> 12) & MASK_6_BIT_I)],
+                ALL_DIGITS[((number >>> 18) & MASK_6_BIT_I)],
+                ALL_DIGITS[((number >>> 24) & MASK_6_BIT_I)],
+                ALL_DIGITS[((number >>> 30) & MASK_6_BIT_I)]};
 
         return String.valueOf(digits);
     }
 
     public static String longToString(final long number) {
-        final char[] digits = {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
 
-        digits[0] = ALL_DIGITS[(int) ((number >>> 0) & MASK_6_BIT_L)];
-        digits[1] = ALL_DIGITS[(int) ((number >>> 6) & MASK_6_BIT_L)];
-        digits[2] = ALL_DIGITS[(int) ((number >>> 12) & MASK_6_BIT_L)];
-        digits[3] = ALL_DIGITS[(int) ((number >>> 18) & MASK_6_BIT_L)];
-        digits[4] = ALL_DIGITS[(int) ((number >>> 24) & MASK_6_BIT_L)];
-        digits[5] = ALL_DIGITS[(int) ((number >>> 30) & MASK_6_BIT_L)];
-        digits[6] = ALL_DIGITS[(int) ((number >>> 36) & MASK_6_BIT_L)];
-        digits[7] = ALL_DIGITS[(int) ((number >>> 42) & MASK_6_BIT_L)];
-        digits[8] = ALL_DIGITS[(int) ((number >>> 58) & MASK_6_BIT_L)];
-        digits[9] = ALL_DIGITS[(int) ((number >>> 54) & MASK_6_BIT_L)];
-        digits[10] = ALL_DIGITS[(int) ((number >>> 60) & MASK_6_BIT_L)];
+        final char[] digits = {
+                ALL_DIGITS[(int) ((number >>> 0) & MASK_6_BIT_L)],
+                ALL_DIGITS[(int) ((number >>> 6) & MASK_6_BIT_L)],
+                ALL_DIGITS[(int) ((number >>> 12) & MASK_6_BIT_L)],
+                ALL_DIGITS[(int) ((number >>> 18) & MASK_6_BIT_L)],
+                ALL_DIGITS[(int) ((number >>> 24) & MASK_6_BIT_L)],
+                ALL_DIGITS[(int) ((number >>> 30) & MASK_6_BIT_L)],
+                ALL_DIGITS[(int) ((number >>> 36) & MASK_6_BIT_L)],
+                ALL_DIGITS[(int) ((number >>> 42) & MASK_6_BIT_L)],
+                ALL_DIGITS[(int) ((number >>> 58) & MASK_6_BIT_L)],
+                ALL_DIGITS[(int) ((number >>> 54) & MASK_6_BIT_L)],
+                ALL_DIGITS[(int) ((number >>> 60) & MASK_6_BIT_L)]};
 
         return String.valueOf(digits);
     }
