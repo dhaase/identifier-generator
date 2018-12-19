@@ -5,7 +5,12 @@ import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Ein Generator um 64 Bit Identifier (= Kennungen) zu erzeugen.
+ * Ein transient Generator um 32 oder 64 Bit Identifier (= Kennungen) zu erzeugen.
+ * <p>
+ * Dieser Identifier-Generator h&auml;lt keinen globalen Zustand. Er basiert
+ * daher auf einen zuf&auml;lligen (mit {@link SecureRandom}) Anfangszustand.
+ * Jede Instanz, auch die serialisierten Instanzen, haben einen anderen
+ * Anfangszustand.
  * <p>
  * Dieser Generator liefert mit jedem Aufruf von {@link #nextLong()}
  * eine neue Id. Die generierten Ids sind <b>nicht</b> fortlaufend da
@@ -13,10 +18,10 @@ import java.util.concurrent.atomic.AtomicLong;
  * <p>
  * Jede Instanz dieses Generators erzeugt seine eigene, von anderen Instanzen
  * unabh&auml;ngige, Folge von Ids. Es ist somit mit hoher Wahrscheinlichkeit
- * (= mit der Kollisions-Wahrscheinlichkeit des Hash-Generators) ausgeschlossen
- * das zwei Instanzen dieses Generators gleiche Ids erzeugen.
+ * (= mit der Kollisions-Wahrscheinlichkeit des {@link SipHash24}-Generators)
+ * ausgeschlossen das zwei Instanzen dieses Generators gleiche Ids erzeugen.
  * <p>
- * Dieser Generator ist auch bei nebenl&auml;figen Zugriffen sicher.
+ * Dieser Generator ist auch bei nebenl&auml;figen Zugriffen sehr sicher.
  * Allerdings empfiehlt es sich f&uuml;r jeden Thread eine eigene Instanz zu
  * erzeugen, um Wartezyklen bei Ressourcenkonflikt-Situationen zu vermeiden.
  * <p>
@@ -28,6 +33,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * kurzen Zeitraum hinweg eindeutig.
  * <p>
  * Intern wird der {@link SipHash24}-Generator verwendet.
+ * Der {@link SipHash24}-Generator implementiert eine keyed kryptographische Hashfunktion
+ * und optimiert f&uuml;r kurze Bytefolgen und Geschwindigkeit.
  * Die Wahrscheinlichkeit von Kollisionen wird praktisch vollst&auml;ndig
  * von der Qualit&auml;t des eingesetzten {@link SipHash24}-Generators bestimmt.
  */

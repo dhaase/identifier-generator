@@ -1,5 +1,9 @@
 package eu.dirk.haase.identifier;
 
+/**
+ * Erzeugt hoch performant eine textuelle Darstellung aus einer
+ * 32 oder 64 Bit langen Integer-Zahl.
+ */
 public class CompactIdentifierRepresentation {
 
 
