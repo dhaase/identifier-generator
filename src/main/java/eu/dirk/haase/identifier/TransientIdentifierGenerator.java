@@ -2,7 +2,6 @@ package eu.dirk.haase.identifier;
 
 import java.io.Serializable;
 import java.security.SecureRandom;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -41,12 +40,13 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class TransientIdentifierGenerator implements IdentifierGenerator, Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     private static final SecureRandom RANDOM = new SecureRandom();
-
+    /**
+     * Der globale erste Schl&uuml;ssel mit dem dieser {@link IdentifierGenerator}
+     * initialisiert wird.
+     */
     private static final long globalKey1 = RANDOM.nextLong();
-
+    private static final long serialVersionUID = 1L;
     /**
      * Z&auml;hler der bei jedem {@link TransientIdentifierGenerator#nextLong()} um Eins
      * erh&ouml;ht wird.
@@ -56,7 +56,8 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator, 
     private transient final AtomicLong localCounter;
 
     /**
-     * Interner zweiter Schl&uuml;ssel die diesen {@link IdentifierGenerator} initialisiert.
+     * Der lokale zweite Schl&uuml;ssel mit dem dieser {@link IdentifierGenerator}
+     * initialisiert wird.
      * <p>
      * Diese Feldvariable ist transient und wird daher nicht serialisiert.
      */
@@ -70,31 +71,6 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator, 
     private TransientIdentifierGenerator(final long localKey2, final long initialValue) {
         this.localKey2 = localKey2;
         this.localCounter = new AtomicLong(initialValue);
-    }
-
-    @Override
-    public int nextInt() {
-        return (int) nextLong();
-    }
-
-    @Override
-    public long nextLong() {
-        return SipHash24.hash(globalKey1, localKey2, this.localCounter.incrementAndGet());
-    }
-
-    @Override
-    public int lastInt() {
-        return (int) lastLong();
-    }
-
-    @Override
-    public long lastLong() {
-        return SipHash24.hash(globalKey1, localKey2, this.localCounter.get());
-    }
-
-    @Override
-    public String toString() {
-        return CompactIdentifierRepresentation.longToString(lastLong());
     }
 
     @Override
@@ -121,6 +97,31 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator, 
     @Override
     public int hashCode() {
         return (int) (localKey2 ^ (localKey2 >>> 32));
+    }
+
+    @Override
+    public int lastInt() {
+        return (int) lastLong();
+    }
+
+    @Override
+    public long lastLong() {
+        return SipHash24.hash(globalKey1, localKey2, this.localCounter.get());
+    }
+
+    @Override
+    public int nextInt() {
+        return (int) nextLong();
+    }
+
+    @Override
+    public long nextLong() {
+        return SipHash24.hash(globalKey1, localKey2, this.localCounter.incrementAndGet());
+    }
+
+    @Override
+    public String toString() {
+        return CompactIdentifierRepresentation.longToString(lastLong());
     }
 
     private Object writeReplace()

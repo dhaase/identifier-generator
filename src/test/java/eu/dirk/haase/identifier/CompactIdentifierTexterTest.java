@@ -11,13 +11,19 @@ public class CompactIdentifierTexterTest {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
             '$', '#'};
-
+    private final static int MASK_2_BIT_I = 0b00000000000000000000000000000011;
     private final static int MASK_5_BIT_I = 0b00000000000000000000000000011111;
     private final static int MASK_6_BIT_I = 0b00000000000000000000000000111111;
     private final static int MASK_7_BIT_I = 0b00000000000000000000000001111111;
-    private final static int MASK_2_BIT_I = 0b00000000000000000000000000000011;
 
-//string collisions: 58849109 vs 57014101: LTVP30
+    private void print(int n) {
+        for (int i = 0; 32 > i; i = i + 6) {
+            final int i1 = (n >>> i) & MASK_6_BIT_I;
+            System.out.println(i + ": " + toBinaryString32(i1) + ": -> " + i1);
+        }
+    }
+
+    //string collisions: 58849109 vs 57014101: LTVP30
     @Test
     public void test() {
         print(57014101);
@@ -27,14 +33,6 @@ public class CompactIdentifierTexterTest {
         System.out.println(CompactIdentifierRepresentation.intToString(Integer.MIN_VALUE | Integer.MAX_VALUE));
         System.out.println(CompactIdentifierRepresentation.intToString(343865888));
     }
-
-    private void print(int n) {
-        for(int i=0; 32 > i; i = i + 6) {
-            final int i1 = (n >>> i) & MASK_6_BIT_I;
-            System.out.println(i + ": " + toBinaryString32(i1) + ": -> " + i1);
-        }
-    }
-
 
     private String toBinaryString32(int i) {
         String binaryWithOutLeading0 = Integer.toBinaryString(i);
