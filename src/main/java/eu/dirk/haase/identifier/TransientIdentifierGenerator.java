@@ -2,6 +2,7 @@ package eu.dirk.haase.identifier;
 
 import java.io.Serializable;
 import java.security.SecureRandom;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -46,9 +47,20 @@ public final class TransientIdentifierGenerator implements IdentifierGenerator, 
 
     private static final long globalKey1 = RANDOM.nextLong();
 
-    private final AtomicLong localCounter;
+    /**
+     * Z&auml;hler der bei jedem {@link TransientIdentifierGenerator#nextLong()} um Eins
+     * erh&ouml;ht wird.
+     * <p>
+     * Diese Feldvariable ist transient und wird daher nicht serialisiert.
+     */
+    private transient final AtomicLong localCounter;
 
-    private final long localKey2;
+    /**
+     * Interner zweiter Schl&uuml;ssel die diesen {@link IdentifierGenerator} initialisiert.
+     * <p>
+     * Diese Feldvariable ist transient und wird daher nicht serialisiert.
+     */
+    private transient final long localKey2;
 
 
     public TransientIdentifierGenerator() {
